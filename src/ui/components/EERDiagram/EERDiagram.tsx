@@ -11,17 +11,23 @@ export default function EERDiagram() {
     const { data, error, isLoading } = useSWR('/api/generate-diagram', fetcher);
     const mermaidRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        if (!data) return;
+    const drawDiagram = async function (diagram: string) {
+        const element = mermaidRef.current;
+        if (!element) return;
+        const graphDefinition = diagram;
+        mermaid.initialize({ startOnLoad: false, theme: "dark" });
+        const { svg, bindFunctions } = await mermaid.render('mermaid-svg', graphDefinition);
+        element.innerHTML = svg;
 
-        if (mermaidRef.current) {
-            mermaid.initialize({ startOnLoad: false, theme: "dark" });
-            mermaid.render("mermaid-svg", data?.diagram).then((el) => {
-                if (mermaidRef.current) {
-                  mermaidRef.current.innerHTML = el.svg;
-                }
-              });
+        if (bindFunctions) {
+          bindFunctions(element);
         }
+      };
+
+    useEffect(() => {
+        if (!data || !data.diagram) return;
+
+        drawDiagram(data.diagram);
     }, [data]);
     
     if (error) {
