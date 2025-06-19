@@ -1,12 +1,10 @@
-import { generateInitialDataForScenario } from "@/lib/services/GenerateExamService";
-import { getSession } from "@/lib/session";
 import { NextResponse } from "next/server";
 import { handleApiError } from "@/lib/error/ErrorHandler";
+import { getInitialDataByStudentInSession } from "@/lib/controllers/ExamController";
 
 export async function GET() {
     try {
-        const session = await getSession();
-        const initialData = await generateInitialDataForScenario(session.exam);
+        const initialData = await getInitialDataByStudentInSession();
 
         return NextResponse.json(initialData);
     } catch (error) {

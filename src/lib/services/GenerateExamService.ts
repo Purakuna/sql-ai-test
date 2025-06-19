@@ -13,7 +13,7 @@ import {
 } from "@/lib/prompts/GenerateDiagramForScenario";
 
 import { QuestionToBuild } from "@/lib/models/QuestionToBuild";
-import { LightExam, Exam } from "@/lib/models/Exam";
+import { Exam } from "@/lib/models/Exam";
 import { getSession } from "@/lib/session";
 import { NotFoundError } from "../error/ErrorHandler";
 import { InitialData } from "../models/InitialData";
@@ -77,7 +77,7 @@ export const setExamInSession = async (exam: Exam) => {
     await session.save();
 }
 
-export const generateInitialDataForScenario = async (exam?: LightExam): Promise<InitialData> => {
+export const generateInitialDataForScenario = async (exam?: Exam): Promise<InitialData> => {
     if (!exam) {
         throw new NotFoundError("No se encontro examen");
     }
@@ -100,7 +100,7 @@ export const generateInitialDataForScenario = async (exam?: LightExam): Promise<
     return JSON.parse(generatedContent.text);
 }
 
-export const generateDiagramForScenario = async (exam: LightExam | undefined): Promise<{ diagram: string }> => {
+export const generateDiagramForScenario = async (exam: Exam | undefined): Promise<{ diagram: string }> => {
     if (!exam) {
         throw new NotFoundError("No se encontro examen");
     }

@@ -10,10 +10,7 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-type ExamInFirebase = {
-    scenario: string;
-    tables: string[];
-    questions: string[];
+interface ExamInFirebase extends Exam {
     studentId: string;
     studentName: string;
     createdAt: admin.firestore.FieldValue;

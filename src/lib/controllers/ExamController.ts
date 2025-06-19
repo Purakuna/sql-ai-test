@@ -1,7 +1,7 @@
 import { Student } from "@/lib/models/Student";
-import { generateScenarioForTest } from "@/lib/services/GenerateExamService";
+import { generateDiagramForScenario, generateInitialDataForScenario, generateScenarioForTest } from "@/lib/services/GenerateExamService";
 import { getStudentExamByStudentId, saveStudentExam } from "@/lib/services/StudentService";
-import { ExamAlreadyExistsError } from "@/lib/error/ErrorHandler";
+import { ExamAlreadyExistsError, NotFoundError } from "@/lib/error/ErrorHandler";
 import { getSession } from "@/lib/session";
 
 export async function generateExam(student: Student) {
@@ -18,4 +18,43 @@ export async function generateExam(student: Student) {
     await session.save();
 
     return exam;
+}
+
+export async function getStudentExamByStudentInSession() {
+    const session = await getSession();
+    if (!session.student) {
+        throw new NotFoundError("No se encontro estudiante en la sesion");
+    }
+
+    return await getStudentExamByStudentId(session.student?.studentId);
+}
+
+export async function getDiagramByStudentInSession() {
+    const session = await getSession();
+    if (!session.student) {
+        throw new NotFoundError("No se encontro estudiante en la sesion");
+    }
+
+    const examFound = await getStudentExamByStudentId(session.student?.studentId);
+
+    if (!examFound) {
+        throw new NotFoundError("No se encontro examen");
+    }
+
+    return generateDiagramForScenario(examFound);
+}
+
+export async function getInitialDataByStudentInSession() {
+    const session = await getSession();
+    if (!session.student) {
+        throw new NotFoundError("No se encontro estudiante en la sesion");
+    }
+
+    const examFound = await getStudentExamByStudentId(session.student?.studentId);
+
+    if (!examFound) {
+        throw new NotFoundError("No se encontro examen");
+    }
+
+    return generateInitialDataForScenario(examFound);
 }
