@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
 import { generateExam, FormState } from "@/lib/actions/GenerateExamAction";
 import Spinner from "@/ui/components/Spinner";
 
@@ -10,8 +9,7 @@ export default function StartExamForm() {
         message: "",
         error: false,
     };
-    const [state, formAction] = useActionState(generateExam, initialState);
-    const { pending } = useFormStatus();
+    const [state, formAction, pending] = useActionState(generateExam, initialState);
 
     return (
         <form

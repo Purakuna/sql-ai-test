@@ -3,7 +3,6 @@
 import { Exam } from "@/lib/models/Exam";
 import Question from "@/ui/components/Question";
 import Spinner from "@/ui/components/Spinner";
-import { useFormStatus } from "react-dom";
 
 interface ExamFormProps {
     exam: Exam;
@@ -11,7 +10,8 @@ interface ExamFormProps {
 
 export default function ExamForm({ exam }: ExamFormProps) {
 
-    const { pending } = useFormStatus();
+    // TODO: implement pending
+    const pending = false;
 
     const mapSchema = exam.tables.reduce((acc, table) => {
         acc[table.tableName] = table.columns.map((column) => ({
