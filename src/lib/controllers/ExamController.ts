@@ -1,9 +1,19 @@
 import { Student } from "@/lib/models/Student";
-import { generateDiagramForScenario, generateInitialDataForScenario, generateScenarioForTest } from "@/lib/services/GenerateExamService";
-import { getStudentExamByStudentId, saveStudentExam } from "@/lib/services/StudentService";
+import { 
+    generateDiagramForScenario, 
+    generateHintForSqlQuery, 
+    generateInitialDataForScenario, 
+    generateQueryPreviewForSqlQuery, 
+    generateScenarioForTest 
+} from "@/lib/services/GenerateExamService";
+import { 
+    getStudentExamByStudentId,
+    saveStudentExam,
+    getDataForStudentAndScenario,
+    saveDataForStudentAndScenario
+} from "@/lib/services/StudentService";
 import { ExamAlreadyExistsError, NotFoundError } from "@/lib/error/ErrorHandler";
 import { getSession } from "@/lib/session";
-import { saveDataForStudentAndScenario } from "../adapters/Firebase";
 import { InitialDataTransformed } from "../models/InitialData";
 
 export async function generateExam(student: Student) {
@@ -90,4 +100,40 @@ export async function generateScenarioDataByStudentInSession() {
 
     session.dataForScenarioLoaded = true;
     await session.save();
+}
+
+export async function generateHintForStudentInSession(requirement: string) {
+    const session = await getSession();
+    if (!session.student) {
+        throw new NotFoundError("No se encontro estudiante en la sesion");
+    }
+
+    const examFound = await getStudentExamByStudentId(session.student?.studentId);
+
+    if (!examFound) {
+        throw new NotFoundError("No se encontro examen");
+    }
+
+    return generateHintForSqlQuery(examFound, requirement);
+}
+
+export async function generateQueryPreviewForStudentInSession(sqlQuery: string) {
+    const session = await getSession();
+    if (!session.student) {
+        throw new NotFoundError("No se encontro estudiante en la sesion");
+    }
+
+    const examFound = await getStudentExamByStudentId(session.student?.studentId);
+
+    if (!examFound) {
+        throw new NotFoundError("No se encontro examen");
+    }
+
+    const data = await getDataForStudentAndScenario(session.student?.studentId);
+
+    if (!data) {
+        throw new NotFoundError("No se encontro data");
+    }
+
+    return generateQueryPreviewForSqlQuery(examFound, data, sqlQuery);
 }

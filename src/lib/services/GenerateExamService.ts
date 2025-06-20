@@ -9,14 +9,22 @@ import {
 } from "@/lib/prompts/GenerateInitialDataForScenario";
 import { 
     SYSTEM_PROMPT as SYSTEM_PROMPT_GENERATE_DIAGRAM_FOR_SCENARIO, 
-    SCHEMA as SCHEMA_GENERATE_DIAGRAM_FOR_SCENARIO 
+    SCHEMA as SCHEMA_GENERATE_DIAGRAM_FOR_SCENARIO, 
 } from "@/lib/prompts/GenerateDiagramForScenario";
+import { 
+    SYSTEM_PROMPT as SYSTEM_PROMPT_GENERATE_HINT_FOR_SQL_QUERY, 
+    SCHEMA as SCHEMA_GENERATE_HINT_FOR_SQL_QUERY 
+} from "@/lib/prompts/GenerateHintForSqlQuery";
+import { 
+    SYSTEM_PROMPT as SYSTEM_PROMPT_GENERATE_QUERY_PREVIEW_FOR_SQL, 
+    SCHEMA as SCHEMA_GENERATE_QUERY_PREVIEW_FOR_SQL 
+} from "@/lib/prompts/GenerateQueryPreviewForSQL";
 
 import { QuestionToBuild } from "@/lib/models/QuestionToBuild";
 import { Exam } from "@/lib/models/Exam";
 import { getSession } from "@/lib/session";
 import { NotFoundError } from "../error/ErrorHandler";
-import { InitialData } from "../models/InitialData";
+import { InitialData, InitialDataTransformed } from "@/lib/models/InitialData";
 
 export const generateQuestionsToBuild = (): QuestionToBuild[] => {
     
@@ -116,6 +124,55 @@ export const generateDiagramForScenario = async (exam: Exam | undefined): Promis
         SYSTEM_PROMPT_GENERATE_DIAGRAM_FOR_SCENARIO, 
         SCHEMA_GENERATE_DIAGRAM_FOR_SCENARIO, 
         `Escenario: ${scenario}, Tablas: ${JSON.stringify(tables)}`
+    );
+
+    if (!generatedContent.text) {
+        throw new Error("No se genero contenido");
+    }
+
+    return JSON.parse(generatedContent.text);
+}
+
+export const generateHintForSqlQuery = async (exam: Exam | undefined, requirement: string): Promise<{ hint: string }> => {
+    if (!exam) {
+        throw new NotFoundError("No se encontro examen");
+    }
+    
+    const { scenario, tables } = exam;
+
+    if (!scenario || !tables) {
+        throw new Error("No se encontro escenario o tablas");
+    }
+    
+    const generatedContent = await generateAsJson(
+        SYSTEM_PROMPT_GENERATE_HINT_FOR_SQL_QUERY, 
+        SCHEMA_GENERATE_HINT_FOR_SQL_QUERY, 
+        `Escenario: ${scenario}, Tablas: ${JSON.stringify(tables)}, Requisito: ${requirement}`
+    );
+
+    if (!generatedContent.text) {
+        throw new Error("No se genero contenido");
+    }
+
+    return JSON.parse(generatedContent.text);
+}
+
+export const generateQueryPreviewForSqlQuery = async (exam: Exam | undefined, data: InitialDataTransformed, sqlQuery: string): Promise<{ status: string, headers?: string[], rows?: string[][] }> => {
+    if (!exam) {
+        throw new NotFoundError("No se encontro examen");
+    }
+    
+    const { scenario, tables } = exam;
+
+    if (!scenario || !tables) {
+        throw new Error("No se encontro escenario o tablas");
+    }
+    
+    const generatedContent = await generateAsJson(
+        SYSTEM_PROMPT_GENERATE_QUERY_PREVIEW_FOR_SQL, 
+        SCHEMA_GENERATE_QUERY_PREVIEW_FOR_SQL, 
+        `Escenario: ${scenario}, Tablas: ${JSON.stringify(tables)}, Data: ${JSON.stringify(data)}, Query: ${sqlQuery}`,
+        "gemini-2.5-flash" // Required to be more accurate
     );
 
     if (!generatedContent.text) {

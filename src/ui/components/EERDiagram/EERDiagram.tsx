@@ -1,14 +1,12 @@
 "use client";
 
-import useSWR from 'swr';
 import mermaid from "mermaid";
 import { useRef, useEffect } from "react";
 import Spinner from "../Spinner";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { useDiagram } from "@/ui/client/useDiagram";
 
 export default function EERDiagram() {
-    const { data, error, isLoading } = useSWR('/api/diagram', fetcher);
+    const { data, error, isLoading } = useDiagram();
     const mermaidRef = useRef<HTMLDivElement>(null);
 
     const drawDiagram = async function (diagram: string) {
