@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { getStudentExamByStudentInSession } from "@/lib/controllers/ExamController";
 import EERDiagram from "@/ui/components/EERDiagram";
 import DataGenerator from "@/ui/components/DataGenerator";
-import Question from "@/ui/components/Question";
+import ExamForm from "@/ui/components/ExamForm";
 
 export default async function Home() {
     const student = await getStudentInSession();
@@ -16,15 +16,13 @@ export default async function Home() {
 
     const exam = await getStudentExamByStudentInSession();
 
-    const mapSchema = exam?.tables.reduce((acc, table) => {
-      acc[table.tableName] = table.columns.map((column) => ({
-          label: column.columnName,
-          type: column.dataType,
-          info: column.description,
-      }));
-      return acc;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  }, {} as Record<string, any>);
+    if (!exam) {
+      return (
+        <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 text-white">
+          <p className="text-gray-400">No se encontró ningún examen para este estudiante.</p>
+        </div>
+      );
+    }
 
     return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 text-white">
@@ -51,9 +49,7 @@ export default async function Home() {
           </h3>
           <EERDiagram />
         </div>
-        {exam?.questions.map((question) => (
-          <Question key={question.id} question={question} mapSchema={mapSchema} />
-        ))}
+        <ExamForm exam={exam} />
       </div>
     </div>
   );

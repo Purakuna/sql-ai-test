@@ -19,7 +19,10 @@ interface QuestionProps {
 export default function Question({ question, mapSchema }: QuestionProps) {
   const { queries, setQuery } = useExamStore();
   const [showPreview, setShowPreview] = useState(false);
-  const { data: preview, trigger, isMutating: isLoadingPreview } = usePreview(queries[question.id] || "");
+
+  const currentQuery = queries[question.id] || "";
+
+  const { data: preview, trigger, isMutating: isLoadingPreview } = usePreview(currentQuery);
 
   useEffect(() => {
     if(!isLoadingPreview && preview) {
@@ -50,7 +53,7 @@ export default function Question({ question, mapSchema }: QuestionProps) {
               </div>
               <div className="relative">
                 <CodeMirror
-                  value={queries[question.id] || ""}
+                  value={currentQuery}
                   height="150px"
                   theme={githubDark}
                   extensions={[sql({
@@ -62,6 +65,7 @@ export default function Question({ question, mapSchema }: QuestionProps) {
                   }
                   className="border border-gray-600 rounded-md"
                 />
+                <input type="hidden" name={question.id} value={currentQuery} />
               </div>
               <div className="mt-2 flex w-full">
                 <Hint requirement={question.requirement} />

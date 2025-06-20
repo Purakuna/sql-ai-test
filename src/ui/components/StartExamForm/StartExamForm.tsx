@@ -1,8 +1,9 @@
 "use client";
 
-import { generateExam, FormState } from "@/lib/actions/GenerateExamAction";
 import { useActionState } from "react";
-import SubmitButton from "@/ui/components/SubmitButton";
+import { useFormStatus } from "react-dom";
+import { generateExam, FormState } from "@/lib/actions/GenerateExamAction";
+import Spinner from "@/ui/components/Spinner";
 
 export default function StartExamForm() {
     const initialState: FormState = {
@@ -10,6 +11,8 @@ export default function StartExamForm() {
         error: false,
     };
     const [state, formAction] = useActionState(generateExam, initialState);
+    const { pending } = useFormStatus();
+
     return (
         <form
           action={formAction}
@@ -45,7 +48,19 @@ export default function StartExamForm() {
             />
           </div>
 
-          <SubmitButton />
+          <button
+            type="submit"
+            disabled={pending}
+            className="w-full mt-6 py-3 bg-indigo-600 rounded-lg font-semibold hover:bg-indigo-700 transition-colors disabled:bg-indigo-500 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {pending ? (
+              <>
+                <Spinner /> Generando Examen...
+              </>
+            ) : (
+              "✨ Generar Examen Personalizado"
+            )}
+          </button>
 
           <p className="text-xs text-center text-yellow-400 mt-4 font-semibold">
             ADVERTENCIA: Una vez que comiences, si cambias de pestaña o ventana,
