@@ -1,3 +1,5 @@
+"use client";
+
 import Spinner from "@/ui/components/Spinner";
 
 const PreviewModal = ({
