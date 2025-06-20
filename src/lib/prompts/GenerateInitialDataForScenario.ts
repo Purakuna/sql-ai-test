@@ -1,4 +1,4 @@
-import { LightQuestion } from "@/lib/models/Question";
+import { LightQuestion } from "@/shared/models/Question";
 
 export const BUILD_SYSTEM_PROMPT = (scenario: string, tablesAsString: string, questions: LightQuestion[]) => {
     return `

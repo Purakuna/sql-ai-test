@@ -15,6 +15,7 @@ const sessionOptions: SessionOptions = {
 export interface Session {
     student?: Student;
     exam?: LightExam;
+    dataForScenarioLoaded?: boolean;
 }
 
 export async function getSession() {

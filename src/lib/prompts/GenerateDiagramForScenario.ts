@@ -10,6 +10,7 @@ export const BUILD_SYSTEM_PROMPT = (scenario: string, tablesAsString: string) =>
             - Los textos de las relaciones deben estar en español
             - Respetar estrictamente la definición de los campos (Nombre de tablas, nombre de columnas)
             - Debes asignar tipo de dato de acuerdo a la definición de los campos [type] y del ejercicio, si no se especifica el tipo de dato, se debe usar 'string' por defecto.
+            - el tipo DECIMAL si viene como DECIMAL(10, 2) se debe usar solo DECIMAL.
 
             **Escenario:** ${scenario}
 
@@ -34,9 +35,7 @@ export const BUILD_SYSTEM_PROMPT = (scenario: string, tablesAsString: string) =>
             \`\`\`
 
             **Esquema a Procesar:**
-            \`\`\`
             ${tablesAsString}
-            \`\`\`
 
     **Formato de Salida:**
     Devuelve la respuesta estrictamente en el formato JSON solicitado.

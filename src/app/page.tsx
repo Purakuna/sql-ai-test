@@ -4,6 +4,8 @@ import { getStudentInSession } from "@/lib/controllers/StudentController";
 import { redirect } from "next/navigation";
 import { getStudentExamByStudentInSession } from "@/lib/controllers/ExamController";
 import EERDiagram from "@/ui/components/EERDiagram";
+import DataGenerator from "@/ui/components/DataGenerator";
+import Question from "@/ui/components/Question";
 
 export default async function Home() {
     const student = await getStudentInSession();
@@ -14,8 +16,19 @@ export default async function Home() {
 
     const exam = await getStudentExamByStudentInSession();
 
+    const mapSchema = exam?.tables.reduce((acc, table) => {
+      acc[table.tableName] = table.columns.map((column) => ({
+          label: column.columnName,
+          type: column.dataType,
+          info: column.description,
+      }));
+      return acc;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  }, {} as Record<string, any>);
+
     return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 text-white">
+      <DataGenerator />
       <div className="w-full max-w-4xl bg-gray-800 p-8 rounded-2xl shadow-2xl space-y-6">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-indigo-400">
@@ -36,11 +49,11 @@ export default async function Home() {
           <h3 className="font-semibold mt-2 text-indigo-300">
             Esquema de Tablas:
           </h3>
-          <pre className="text-sm text-gray-300 font-mono">
-            <code className="text-wrap">{exam?.tables}</code>
-          </pre>
           <EERDiagram />
         </div>
+        {exam?.questions.map((question) => (
+          <Question key={question.id} question={question} mapSchema={mapSchema} />
+        ))}
       </div>
     </div>
   );

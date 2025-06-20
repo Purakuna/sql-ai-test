@@ -23,49 +23,80 @@ Devuelve la respuesta estrictamente en el formato JSON solicitado.
 };
 
 export const SCHEMA = {
-    type: "OBJECT",
-    properties: {
-      scenario: {
-        type: "STRING",
-        description: "Una breve descripción del escenario.",
-      },
-      tables: {
-        type: "STRING",
-        description:
-          "Definición de 5 a 9 tablas, cada una con 5 o más columnas. ej: 'tabla1(col1[type], col2[type], col3[type], col4[type], col5[type]), tabla2(col1[type], col2[type], col3[type], col4[type], col5[type])'. Donde type puede ser int, string, date, etc. Las relaciones deben ser coherentes entre tablas.",
-      },
-      questions: {
-        type: "ARRAY",
-        items: {
-          type: "OBJECT",
-          properties: {
-            id: {
-              type: "STRING",
-              description:
-                "El id de la pregunta, debe iniciar con q{n} donde n es el id de la pregunta, los ids son consecutivos desde 1,2...n",
-            },
-            title: {
-              type: "STRING",
-              description: "El titulo de la pregunta",
-            },
-            prompt: {
-              type: "STRING",
-              description:
-                "El prompt o enunciado de la pregunta, debe ser claro y conciso",
-            },
-            requirement: {
-              type: "STRING",
-              description:
-                "El requisito tecnico de la pregunta, debe ser claro y conciso, debe ser una descripcion de la consulta que se debe realizar. No debe ser una consulta, solo una descripcion de la consulta que se debe realizar.",
-            },
-            points: {
-              type: "NUMBER",
-              description: "Los puntos de la pregunta",
-            },
+  type: "OBJECT",
+  properties: {
+    scenario: {
+      type: "STRING",
+      description: "Una breve descripción del escenario.",
+    },
+    tables: {
+      type: "ARRAY",
+      description: "Una lista de entre 5 y 9 tablas que componen el esquema de la base de datos.",
+      items: {
+        type: "OBJECT",
+        properties: {
+          tableName: {
+            type: "STRING",
+            description: "El nombre de la tabla (ej. 'usuarios', 'productos')."
           },
-          required: ["id", "title", "prompt", "requirement", "points"],
+          columns: {
+            type: "ARRAY",
+            description: "Una lista de 5 o más columnas para esta tabla.",
+            items: {
+              type: "OBJECT",
+              properties: {
+                columnName: {
+                  type: "STRING",
+                  description: "El nombre de la columna (ej. 'id', 'nombre_usuario')."
+                },
+                dataType: {
+                  type: "STRING",
+                  description: "El tipo de dato SQL de la columna (ej. INT, VARCHAR(100), DATETIME, DECIMAL(10, 2), BOOLEAN)."
+                },
+                description: {
+                  type: "STRING",
+                  description: "Una breve descripción de la columna, indicando si es clave primaria (PK), foránea (FK) y a qué tabla referencia, o su propósito general."
+                }
+              },
+              required: ["columnName", "dataType", "description"]
+            }
+          }
         },
+        required: ["tableName", "columns"]
+      }
+    },
+    questions: {
+      type: "ARRAY",
+      items: {
+        type: "OBJECT",
+        properties: {
+          id: {
+            type: "STRING",
+            description:
+              "El id de la pregunta, debe iniciar con q{n} donde n es el id de la pregunta, los ids son consecutivos desde 1,2...n",
+          },
+          title: {
+            type: "STRING",
+            description: "El titulo de la pregunta",
+          },
+          prompt: {
+            type: "STRING",
+            description:
+              "El prompt o enunciado de la pregunta, debe ser claro y conciso",
+          },
+          requirement: {
+            type: "STRING",
+            description:
+              "El requisito tecnico de la pregunta, debe ser claro y conciso, debe ser una descripcion de la consulta que se debe realizar. No debe ser una consulta, solo una descripcion de la consulta que se debe realizar.",
+          },
+          points: {
+            type: "NUMBER",
+            description: "Los puntos de la pregunta",
+          },
+        },
+        required: ["id", "title", "prompt", "requirement", "points"],
       },
     },
-    required: ["scenario", "tables", "questions"],
+  },
+  required: ["scenario", "tables", "questions"],
 };

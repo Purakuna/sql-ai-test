@@ -89,7 +89,7 @@ export const generateInitialDataForScenario = async (exam?: Exam): Promise<Initi
     }
     
     const generatedContent = await generateAsJson(
-        BUILD_SYSTEM_PROMPT_GENERATE_INITIAL_DATA_FOR_SCENARIO(scenario, tables, questions), 
+        BUILD_SYSTEM_PROMPT_GENERATE_INITIAL_DATA_FOR_SCENARIO(scenario, JSON.stringify(tables), questions), 
         SCHEMA_GENERATE_INITIAL_DATA_FOR_SCENARIO, 
         "");
 
@@ -112,7 +112,7 @@ export const generateDiagramForScenario = async (exam: Exam | undefined): Promis
     }
     
     const generatedContent = await generateAsJson(
-        BUILD_SYSTEM_PROMPT_GENERATE_DIAGRAM_FOR_SCENARIO(scenario, tables), 
+        BUILD_SYSTEM_PROMPT_GENERATE_DIAGRAM_FOR_SCENARIO(scenario, JSON.stringify(tables)), 
         SCHEMA_GENERATE_DIAGRAM_FOR_SCENARIO, 
         "");
 

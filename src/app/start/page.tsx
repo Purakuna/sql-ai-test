@@ -3,7 +3,7 @@
 
 import { getStudentInSession } from "@/lib/controllers/StudentController";
 import { redirect } from "next/navigation";
-import StartExamForm from "./StartExamForm";
+import StartExamForm from "@/ui/components/StartExamForm";
 
 export default async function StartPage() {
     const student = await getStudentInSession();

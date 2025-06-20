@@ -1,6 +1,6 @@
 "use client";
 
-import { generateExam, FormState } from "./actions";
+import { generateExam, FormState } from "@/lib/actions/GenerateExamAction";
 import { useActionState } from "react";
 import SubmitButton from "@/ui/components/SubmitButton";
 

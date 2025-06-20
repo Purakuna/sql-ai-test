@@ -3,6 +3,8 @@ import { generateDiagramForScenario, generateInitialDataForScenario, generateSce
 import { getStudentExamByStudentId, saveStudentExam } from "@/lib/services/StudentService";
 import { ExamAlreadyExistsError, NotFoundError } from "@/lib/error/ErrorHandler";
 import { getSession } from "@/lib/session";
+import { saveDataForStudentAndScenario } from "../adapters/Firebase";
+import { InitialDataTransformed } from "../models/InitialData";
 
 export async function generateExam(student: Student) {
     
@@ -44,7 +46,7 @@ export async function getDiagramByStudentInSession() {
     return generateDiagramForScenario(examFound);
 }
 
-export async function getInitialDataByStudentInSession() {
+export async function generateScenarioDataByStudentInSession() {
     const session = await getSession();
     if (!session.student) {
         throw new NotFoundError("No se encontro estudiante en la sesion");
@@ -56,5 +58,36 @@ export async function getInitialDataByStudentInSession() {
         throw new NotFoundError("No se encontro examen");
     }
 
-    return generateInitialDataForScenario(examFound);
+    if (session.dataForScenarioLoaded) {
+        return;
+    }
+
+    const data = await generateInitialDataForScenario(examFound);
+
+    const mappedData: InitialDataTransformed = {
+        tables: []
+    };
+
+    for (const tableObj of data.ts) {
+        const table = tableObj.t;
+        const rows: Record<string, string>[] = [];
+
+        for (const row of tableObj.d) {
+            const rowObj: Record<string, string> = {};
+            for (const cell of row) {
+                rowObj[cell.cn] = cell.cv;
+            }
+            rows.push(rowObj);
+        }
+
+        mappedData.tables.push({
+            table,
+            rows,
+        });
+    }
+    
+    await saveDataForStudentAndScenario(session.student?.studentId, mappedData);
+
+    session.dataForScenarioLoaded = true;
+    await session.save();
 }

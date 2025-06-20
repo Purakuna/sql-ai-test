@@ -5,6 +5,14 @@ export interface InitialData {
       d: {
         cn: string;
         cv: string;
-      }[];
+      }[][];
+    }[];
+}
+
+
+export interface InitialDataTransformed {
+    tables: {
+        table: string;
+        rows: Record<string, string>[];
     }[];
 }

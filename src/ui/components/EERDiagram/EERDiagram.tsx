@@ -8,7 +8,7 @@ import Spinner from "../Spinner";
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function EERDiagram() {
-    const { data, error, isLoading } = useSWR('/api/generate-diagram', fetcher);
+    const { data, error, isLoading } = useSWR('/api/diagram', fetcher);
     const mermaidRef = useRef<HTMLDivElement>(null);
 
     const drawDiagram = async function (diagram: string) {

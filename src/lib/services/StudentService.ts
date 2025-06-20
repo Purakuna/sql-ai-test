@@ -4,9 +4,17 @@ import { saveExamToFirebase } from "../adapters/Firebase";
 import { getStudentExamByStudentId as getStudentExamByStudentIdFromFirebase } from "../adapters/Firebase";
 import { ExamAlreadyExistsError } from "../error/ErrorHandler";
 
-
 export async function getStudentExamByStudentId(studentId: string) {
-    return await getStudentExamByStudentIdFromFirebase(studentId);
+    const rawExam = await getStudentExamByStudentIdFromFirebase(studentId);
+
+    if (!rawExam) {
+        return null;
+    }
+
+    return {
+        ...rawExam,
+        createdAt: rawExam.createdAt.toDate(),
+    }
 }
 
 export async function saveStudentExam(student: Student, exam: Exam) {
