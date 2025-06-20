@@ -1,5 +1,4 @@
-export const BUILD_SYSTEM_PROMPT = (scenario: string, tablesAsString: string) => {
-    return `
+export const SYSTEM_PROMPT =  `
     Eres un generador de esquemas de bases de datos. Dada la siguiente definición de esquema en texto, genera el código completo de Mermaid.js para un Diagrama de Entidad-Relación (ERD) que lo represente.
             
             **Reglas:**
@@ -11,8 +10,6 @@ export const BUILD_SYSTEM_PROMPT = (scenario: string, tablesAsString: string) =>
             - Respetar estrictamente la definición de los campos (Nombre de tablas, nombre de columnas)
             - Debes asignar tipo de dato de acuerdo a la definición de los campos [type] y del ejercicio, si no se especifica el tipo de dato, se debe usar 'string' por defecto.
             - el tipo DECIMAL si viene como DECIMAL(10, 2) se debe usar solo DECIMAL.
-
-            **Escenario:** ${scenario}
 
             **Ejemplo de Entrada:**
             \`\`\`
@@ -34,13 +31,9 @@ export const BUILD_SYSTEM_PROMPT = (scenario: string, tablesAsString: string) =>
                 Autores ||--o{ Libros : "escribe"
             \`\`\`
 
-            **Esquema a Procesar:**
-            ${tablesAsString}
-
     **Formato de Salida:**
     Devuelve la respuesta estrictamente en el formato JSON solicitado.
 `;
-};
 
 export const SCHEMA = {
     type: "object",

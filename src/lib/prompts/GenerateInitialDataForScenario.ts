@@ -1,7 +1,4 @@
-import { LightQuestion } from "@/shared/models/Question";
-
-export const BUILD_SYSTEM_PROMPT = (scenario: string, tablesAsString: string, questions: LightQuestion[]) => {
-    return `
+export const SYSTEM_PROMPT = `
     Eres un generador de datos iniciales para una base de datos. 
 
     **Reglas:**
@@ -13,16 +10,9 @@ export const BUILD_SYSTEM_PROMPT = (scenario: string, tablesAsString: string, qu
 
     Los valores de las columnas DEBEN satisfacer las preguntas del examen (fechas, valores especificos a consultar).
 
-    **Escenario:** ${scenario}
-    **Tablas:** ${tablesAsString}
-    **Preguntas:** 
-
-    ${questions.map((question, index) => `    ${index + 1}) Requisito: ${question.requirement}.`).join("\n")}
-
     **Formato de Salida:**
     Devuelve la respuesta estrictamente en el formato JSON solicitado.
 `;
-};
 
 export const SCHEMA = {
     type: "object",

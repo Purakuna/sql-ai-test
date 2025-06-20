@@ -1,14 +1,14 @@
 import { generateAsJson } from "@/lib/adapters/Gemini";
 import { 
-    BUILD_SYSTEM_PROMPT as BUILD_SYSTEM_PROMPT_GENERATE_SCENARIO_FOR_TEST, 
+    SYSTEM_PROMPT as SYSTEM_PROMPT_GENERATE_SCENARIO_FOR_TEST, 
     SCHEMA as SCHEMA_GENERATE_SCENARIO_FOR_TEST 
 } from "@/lib/prompts/GenerateScenarioForTest";
 import { 
-    BUILD_SYSTEM_PROMPT as BUILD_SYSTEM_PROMPT_GENERATE_INITIAL_DATA_FOR_SCENARIO, 
+    SYSTEM_PROMPT as SYSTEM_PROMPT_GENERATE_INITIAL_DATA_FOR_SCENARIO, 
     SCHEMA as SCHEMA_GENERATE_INITIAL_DATA_FOR_SCENARIO 
 } from "@/lib/prompts/GenerateInitialDataForScenario";
 import { 
-    BUILD_SYSTEM_PROMPT as BUILD_SYSTEM_PROMPT_GENERATE_DIAGRAM_FOR_SCENARIO, 
+    SYSTEM_PROMPT as SYSTEM_PROMPT_GENERATE_DIAGRAM_FOR_SCENARIO, 
     SCHEMA as SCHEMA_GENERATE_DIAGRAM_FOR_SCENARIO 
 } from "@/lib/prompts/GenerateDiagramForScenario";
 
@@ -53,9 +53,9 @@ const QUESTIONS_TO_BUILD = generateQuestionsToBuild();
 export const generateScenarioForTest = async (): Promise<Exam> => {
     
     const generatedContent = await generateAsJson(
-        BUILD_SYSTEM_PROMPT_GENERATE_SCENARIO_FOR_TEST(QUESTIONS_TO_BUILD), 
+        SYSTEM_PROMPT_GENERATE_SCENARIO_FOR_TEST, 
         SCHEMA_GENERATE_SCENARIO_FOR_TEST, 
-        ""
+        `Preguntas: ${QUESTIONS_TO_BUILD.map((question, index) => `    ${index + 1}) ${question.instructions} (${question.points} puntos).`).join("\n")}`
     );
 
     if (!generatedContent.text) {
@@ -89,9 +89,10 @@ export const generateInitialDataForScenario = async (exam?: Exam): Promise<Initi
     }
     
     const generatedContent = await generateAsJson(
-        BUILD_SYSTEM_PROMPT_GENERATE_INITIAL_DATA_FOR_SCENARIO(scenario, JSON.stringify(tables), questions), 
+        SYSTEM_PROMPT_GENERATE_INITIAL_DATA_FOR_SCENARIO, 
         SCHEMA_GENERATE_INITIAL_DATA_FOR_SCENARIO, 
-        "");
+        `Escenario: ${scenario}. Tablas: ${JSON.stringify(tables)}. Preguntas: (${questions.map((question, index) => `    ${index + 1}) Requisito: ${question.requirement}.`).join(",")})`
+    );
 
     if (!generatedContent.text) {
         throw new Error("No se genero contenido");
@@ -112,9 +113,10 @@ export const generateDiagramForScenario = async (exam: Exam | undefined): Promis
     }
     
     const generatedContent = await generateAsJson(
-        BUILD_SYSTEM_PROMPT_GENERATE_DIAGRAM_FOR_SCENARIO(scenario, JSON.stringify(tables)), 
+        SYSTEM_PROMPT_GENERATE_DIAGRAM_FOR_SCENARIO, 
         SCHEMA_GENERATE_DIAGRAM_FOR_SCENARIO, 
-        "");
+        `Escenario: ${scenario}, Tablas: ${JSON.stringify(tables)}`
+    );
 
     if (!generatedContent.text) {
         throw new Error("No se genero contenido");
