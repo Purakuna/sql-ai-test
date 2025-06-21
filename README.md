@@ -6,6 +6,10 @@ This project is a Next.js application designed to assist with educational tasks,
 
 You can find the project on [Deepwiki](https://deepwiki.com/Purakuna/sql-ai-test).
 
+## Prompt-friendly Codebase
+
+You can find the prompt-friendly codebase on [Gitingest](https://gitingest.com/Purakuna/sql-ai-test).
+
 ## Features
 
 *   Generate exam questions and complete exams using AI (leveraging Gemini API).
