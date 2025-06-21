@@ -43,6 +43,7 @@ export default function Question({ question, mapSchema }: QuestionProps) {
                 <button 
                 className="text-sm text-cyan-400 hover:text-cyan-300 disabled:opacity-50 flex items-center gap-2" 
                 onClick={() => trigger(currentQuery)} 
+                data-testid="execute-button"
                 disabled={isLoadingPreview}
               >
                   {isLoadingPreview ? (
