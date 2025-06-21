@@ -2,6 +2,10 @@
 
 This project is a Next.js application designed to assist with educational tasks, including AI-powered exam generation and student data management.
 
+## AI-Powered Wiki
+
+You can find the project on [Deepwiki](https://deepwiki.com/Purakuna/sql-ai-test).
+
 ## Features
 
 *   Generate exam questions and complete exams using AI (leveraging Gemini API).
