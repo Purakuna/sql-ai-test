@@ -1,6 +1,6 @@
 import { GoogleGenAI, GenerateContentConfig } from '@google/genai';
 
-const ai = new GoogleGenAI({
+export const _ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
 });
 
@@ -34,7 +34,7 @@ export const generateAsJson = (systemInstruction: string, schema: object, userPr
 
 
 
-    return ai.models.generateContent({
+    return _ai.models.generateContent({
         config,
         contents,
         model

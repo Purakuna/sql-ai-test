@@ -2,13 +2,13 @@
 "use server";
 
 import { generateExam as generateExamController } from "@/lib/controllers/ExamController";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { handleActionError } from "@/lib/error/ErrorHandler";
 import { redirect } from "next/navigation";
 
 const schema = z.object({
-  studentId: z.string().min(1, { message: "El número de estudiante es requerido." }),
-  fullName: z.string().min(1, { message: "El nombre completo es requerido." }),
+  studentId: z.string("El número de estudiante es requerido.").min(1, "El número de estudiante es requerido."),
+  fullName: z.string("El nombre completo es requerido.").min(1, "El nombre completo es requerido."),
 });
 
 export type FormState = {
