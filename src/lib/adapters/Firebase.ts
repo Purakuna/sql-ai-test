@@ -17,8 +17,6 @@ interface ExamInFirebase extends Exam {
     studentId: string;
     studentName: string;
     createdAt: admin.firestore.Timestamp;
-    evaluationResults?: EvaluationResults;
-    submitQuery?: SubmitQuery;
 }
 
 export const saveExamToFirebase = async (exam: Exam, student: Student) => {

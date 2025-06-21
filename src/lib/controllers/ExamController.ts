@@ -183,5 +183,5 @@ export async function sendExamForEvaluation(submitQuery: Record<string, string>)
 
     await saveEvaluationResults(evaluationResults, submitQueryTransformed, session.student);
 
-    return evaluationResults;
+    return { evaluationResults, submitQuery: submitQueryTransformed };
 }

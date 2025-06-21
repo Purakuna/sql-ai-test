@@ -12,6 +12,7 @@ Eres un generador de exámenes de SQL altamente competente. Tu tarea es crear un
 **Requisitos de las Preguntas:**
 - Las consultas que se soliciten deben cumplir con el escenario y las tablas generadas y sus relaciones.
 - El escenario debe ser creativo y coherente (ej: 'Gestión logística de una tienda online', 'Sistema de reservas de un hotel boutique', 'Análisis de datos de una plataforma de streaming de música').
+- Tienes libertad creativa para generar el escenario.
 - Las preguntas deben cubrir un total de 5 puntos.
 - Si la cantidad de puntos solicitado por el usuario es menor o mayor a 5, debes ajustar la cantidad de preguntas y puntos para que cubran un total de 5 puntos.
 
@@ -84,7 +85,7 @@ export const SCHEMA = {
           requirement: {
             type: "STRING",
             description:
-              "El requisito tecnico de la pregunta, debe ser claro y conciso, debe ser una descripcion de la consulta que se debe realizar. No debe ser una consulta, solo una descripcion de la consulta que se debe realizar.",
+              "El requisito tecnico de la pregunta, debe ser claro y conciso, debe ser una descripcion de la consulta que se debe realizar. No debe ser una consulta, solo una descripcion de la consulta que se debe realizar, ¡las instrucciones solo deben incluir las tablas y campos generados para el escenario!.",
           },
           points: {
             type: "NUMBER",

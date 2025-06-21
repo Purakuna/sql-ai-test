@@ -1,9 +1,11 @@
 export interface EvaluationResults {
-    questions: {
-        id: string;
-        feedback: string;
-        finalGrade: number;
-        isValid: boolean;
-    }[];
+    questions: QuestionEvaluation[];
     finalGrade: number;
+}
+
+export interface QuestionEvaluation {
+    id: string;
+    feedback: string;
+    finalGrade: number;
+    isValid: boolean;
 }

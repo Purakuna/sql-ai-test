@@ -14,6 +14,7 @@ export default function ExamForm({ exam }: ExamFormProps) {
 
     const initialState: FormState = {
         evaluationResults: null,
+        submitQuery: null,
         error: null,
     };
 
