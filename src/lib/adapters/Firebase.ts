@@ -1,5 +1,5 @@
 import admin from "firebase-admin";
-import { Exam } from "@/lib/models/Exam";
+import { Exam } from "@/shared/models/Exam";
 import { Student } from "@/lib/models/Student";
 import { InitialDataTransformed } from "@/lib/models/InitialData";
 

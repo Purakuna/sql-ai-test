@@ -1,6 +1,6 @@
 "use client";
 
-import { Exam } from "@/lib/models/Exam";
+import { Exam } from "@/shared/models/Exam";
 import Question from "@/ui/components/Question";
 import Spinner from "@/ui/components/Spinner";
 

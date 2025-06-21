@@ -21,7 +21,7 @@ import {
 } from "@/lib/prompts/GenerateQueryPreviewForSQL";
 
 import { QuestionToBuild } from "@/lib/models/QuestionToBuild";
-import { Exam } from "@/lib/models/Exam";
+import { Exam } from "@/shared/models/Exam";
 import { getSession } from "@/lib/session";
 import { NotFoundError } from "../error/ErrorHandler";
 import { InitialData, InitialDataTransformed } from "@/lib/models/InitialData";

@@ -1,5 +1,5 @@
 import { Student } from "../models/Student";
-import { Exam } from "../models/Exam";
+import { Exam } from "@/shared/models/Exam";
 import { saveExamToFirebase } from "../adapters/Firebase";
 import { ExamAlreadyExistsError } from "../error/ErrorHandler";
 import { 

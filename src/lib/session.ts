@@ -1,6 +1,6 @@
 import { getIronSession, SessionOptions } from "iron-session";
 import { cookies } from "next/headers";
-import { LightExam } from "@/lib/models/Exam";
+import { LightExam } from "@/shared/models/Exam";
 import { Student } from "@/lib/models/Student";
 
 const sessionOptions: SessionOptions = {
