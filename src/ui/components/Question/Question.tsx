@@ -22,7 +22,7 @@ export default function Question({ question, mapSchema }: QuestionProps) {
 
   const currentQuery = queries[question.id] || "";
 
-  const { data: preview, trigger, isMutating: isLoadingPreview } = usePreview(currentQuery);
+  const { data: preview, trigger, isMutating: isLoadingPreview } = usePreview();
 
   useEffect(() => {
     if(!isLoadingPreview && preview) {
@@ -31,7 +31,7 @@ export default function Question({ question, mapSchema }: QuestionProps) {
   }, [isLoadingPreview, preview]);
 
     return (
-        <div className="p-4 border border-gray-700 rounded-lg bg-gray-900/30">
+        <div className="p-4 border border-gray-700 rounded-lg bg-gray-900/30 mb-4">
             <label htmlFor={question.id} className="block text-lg font-medium">
                 {question.title} ({question.points} Puntos)
               </label>
@@ -40,7 +40,11 @@ export default function Question({ question, mapSchema }: QuestionProps) {
                 <strong className="text-indigo-400">{question.requirement}</strong>
               </p>
               <div className="flex justify-end mb-2">
-                <button className="text-sm text-cyan-400 hover:text-cyan-300 disabled:opacity-50 flex items-center gap-2" onClick={() => trigger()} disabled={isLoadingPreview}>
+                <button 
+                className="text-sm text-cyan-400 hover:text-cyan-300 disabled:opacity-50 flex items-center gap-2" 
+                onClick={() => trigger(currentQuery)} 
+                disabled={isLoadingPreview}
+              >
                   {isLoadingPreview ? (
                     <>
                       <Spinner size="h-4 w-4" color="text-cyan-400" />

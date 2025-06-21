@@ -19,12 +19,18 @@ import {
     SYSTEM_PROMPT as SYSTEM_PROMPT_GENERATE_QUERY_PREVIEW_FOR_SQL, 
     SCHEMA as SCHEMA_GENERATE_QUERY_PREVIEW_FOR_SQL 
 } from "@/lib/prompts/GenerateQueryPreviewForSQL";
+import { 
+    SYSTEM_PROMPT as SYSTEM_PROMPT_GENERATE_EXAM_EVALUATION, 
+    SCHEMA as SCHEMA_GENERATE_EXAM_EVALUATION 
+} from "@/lib/prompts/ExecuteExamEvaluation";
 
 import { QuestionToBuild } from "@/lib/models/QuestionToBuild";
 import { Exam } from "@/shared/models/Exam";
 import { getSession } from "@/lib/session";
 import { NotFoundError } from "../error/ErrorHandler";
 import { InitialData, InitialDataTransformed } from "@/lib/models/InitialData";
+import { SubmitQuery } from "@/lib/models/SubmitQuery";
+import { EvaluationResults } from "@/lib/models/EvaluationResults";
 
 export const generateQuestionsToBuild = (): QuestionToBuild[] => {
     
@@ -181,3 +187,38 @@ export const generateQueryPreviewForSqlQuery = async (exam: Exam | undefined, da
 
     return JSON.parse(generatedContent.text);
 }
+
+export const sendExamForEvaluation = async (exam: Exam | undefined, data: InitialDataTransformed, submitQuery: SubmitQuery): Promise<EvaluationResults> => {
+    if (!exam) {
+        throw new NotFoundError("No se encontro examen");
+    }
+    
+    const { scenario, tables } = exam;
+
+    if (!scenario || !tables) {
+        throw new Error("No se encontro escenario o tablas");
+    }
+
+    const generatedContent = await generateAsJson(
+        SYSTEM_PROMPT_GENERATE_EXAM_EVALUATION, 
+        SCHEMA_GENERATE_EXAM_EVALUATION, 
+        `
+        Escenario: ${scenario}, Tablas: ${JSON.stringify(tables)}, Data: ${JSON.stringify(data)}, 
+        Queries: ${JSON.stringify(submitQuery.queries)}`,
+        "gemini-2.5-flash" // Required to be more accurate
+    );
+
+    if (!generatedContent.text) {
+        throw new Error("No se genero contenido");
+    }
+
+    return JSON.parse(generatedContent.text);
+}
+
+export const calculateFinalGrade = (evaluationResults: EvaluationResults, exam: Exam): number => {
+    const finalGrade = evaluationResults.questions.reduce((acc, question) => acc + (question.finalGrade/100) * (exam.questions.find((q) => q.id === question.id)?.points || 0), 0);
+
+    return Number(finalGrade.toFixed(2));
+}
+
+    

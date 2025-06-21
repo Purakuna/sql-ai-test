@@ -1,13 +1,16 @@
-import { Student } from "../models/Student";
+import { Student } from "@/lib/models/Student";
 import { Exam } from "@/shared/models/Exam";
-import { saveExamToFirebase } from "../adapters/Firebase";
-import { ExamAlreadyExistsError } from "../error/ErrorHandler";
+import { saveExamToFirebase } from "@/lib/adapters/Firebase";
+import { ExamAlreadyExistsError } from "@/lib/error/ErrorHandler";
 import { 
     saveDataForStudentAndScenario as saveDataForStudentAndScenarioInFirebase, 
     getDataForStudentAndScenario as getDataForStudentAndScenarioInFirebase,
-    getStudentExamByStudentId as getStudentExamByStudentIdFromFirebase
-} from "../adapters/Firebase";
-import { InitialDataTransformed } from "../models/InitialData";
+    getStudentExamByStudentId as getStudentExamByStudentIdFromFirebase,
+    saveEvaluationResultsToFirebase
+} from "@/lib/adapters/Firebase";
+import { InitialDataTransformed } from "@/lib/models/InitialData";
+import { EvaluationResults } from "@/lib/models/EvaluationResults";
+import { SubmitQuery } from "@/lib/models/SubmitQuery";
 
 export async function getStudentExamByStudentId(studentId: string) {
     const rawExam = await getStudentExamByStudentIdFromFirebase(studentId);
@@ -41,4 +44,8 @@ export async function getDataForStudentAndScenario(studentId: string) {
         return null;
     }
     return data;
+}
+
+export async function saveEvaluationResults(evaluationResults: EvaluationResults, submitQuery: SubmitQuery, student: Student) {
+    await saveEvaluationResultsToFirebase(evaluationResults, submitQuery, student);
 }

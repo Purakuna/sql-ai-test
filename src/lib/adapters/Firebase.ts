@@ -2,6 +2,8 @@ import admin from "firebase-admin";
 import { Exam } from "@/shared/models/Exam";
 import { Student } from "@/lib/models/Student";
 import { InitialDataTransformed } from "@/lib/models/InitialData";
+import { EvaluationResults } from "@/lib/models/EvaluationResults";
+import { SubmitQuery } from "@/lib/models/SubmitQuery";
 
 if (!admin.apps.length) {
     admin.initializeApp({
@@ -15,6 +17,8 @@ interface ExamInFirebase extends Exam {
     studentId: string;
     studentName: string;
     createdAt: admin.firestore.Timestamp;
+    evaluationResults?: EvaluationResults;
+    submitQuery?: SubmitQuery;
 }
 
 export const saveExamToFirebase = async (exam: Exam, student: Student) => {
@@ -24,6 +28,14 @@ export const saveExamToFirebase = async (exam: Exam, student: Student) => {
         studentId: student.studentId,
         studentName: student.fullName,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+};
+
+export const saveEvaluationResultsToFirebase = async (evaluationResults: EvaluationResults, submitQuery: SubmitQuery, student: Student) => {
+    const docRef = db.collection("exams").doc(student.studentId);
+    await docRef.update({
+        evaluationResults,
+        submitQuery,
     });
 };
 
